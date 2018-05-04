@@ -44,3 +44,14 @@
   template:
     src: notmuch-config.j2
     dest: "{{ lookup('env', 'HOME') }}/.notmuch-config"
+
+- name: Ensure emacs.d exists
+  file:
+    name: ~/.emacs.d
+    state: directory
+
+- name: Ensure notmuch loaded by emacs
+  lineinfile:
+    create: yes
+    name: ~/.emacs.d/init.el
+    line: (require 'notmuch)
