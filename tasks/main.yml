@@ -1,0 +1,20 @@
+---
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - isync
+  - notmuch
+  - emacs-notmuch
+  become: yes
+
+- name: Ensure maildir exists
+  file:
+    name: "{{ mail_dir | default('~/mail') }}"
+    state: directory
+
+- name: Install mbsync config
+  template:
+    src: mbsyncrc.j2
+    dest: "{{ lookup('env', 'HOME') }}/.mbsyncrc"

@@ -1,0 +1,20 @@
+IMAPAccount mail
+Host {{ mail_host|default('imap.gmail.com') }}
+User {{ mail_user }}
+Pass {{ mail_password }}
+SSLType IMAPS
+
+IMAPStore mail-remote
+Account mail
+
+MaildirStore mail-local
+Path {{ mail_dir|default('~/mail/') }}
+Inbox {{ mail_dir|default('~/mail') }}/inbox
+
+Channel mail
+Master :mail-remote:
+Slave :mail-local:
+Patterns * ![Gmail]*
+Create Both
+SyncState *
+Sync All
