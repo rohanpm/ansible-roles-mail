@@ -1,0 +1,9 @@
+[Unit]
+Description=Sync mail periodically
+
+[Timer]
+OnUnitInactiveSec={{ mail_interval|default('4min') }}
+Persistent=true
+
+[Install]
+WantedBy=default.target

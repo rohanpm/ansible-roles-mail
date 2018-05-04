@@ -15,7 +15,7 @@ Inbox {{ mail_dir|default('~/mail') }}/inbox
 Channel mail
 Master :mail-remote:
 Slave :mail-local:
-Patterns * ![Gmail]*
+Patterns {{ mail_patterns|default('INBOX') }}
 Create Both
 SyncState *
 Sync All

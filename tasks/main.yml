@@ -18,3 +18,24 @@
   template:
     src: mbsyncrc.j2
     dest: "{{ lookup('env', 'HOME') }}/.mbsyncrc"
+
+- name: Ensure systemd dir exists
+  file:
+    name: ~/.config/systemd/user
+    state: directory
+
+- name: Install mbsync units
+  template:
+    src: "mbsync.{{ item }}.j2"
+    dest: ~/.config/systemd/user/mbsync.{{ item }}
+  with_items:
+  - service
+  - timer
+
+- name: Enable mbsync timer
+  systemd:
+    name: mbsync.timer
+    user: yes
+    daemon_reload: yes
+    state: started
+    enabled: yes
