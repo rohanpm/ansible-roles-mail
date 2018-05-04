@@ -3,6 +3,7 @@ Host {{ mail_host|default('imap.gmail.com') }}
 User {{ mail_user }}
 Pass {{ mail_password }}
 SSLType IMAPS
+PipelineDepth 50
 
 IMAPStore mail-remote
 Account mail
