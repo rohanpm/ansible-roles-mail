@@ -11,7 +11,7 @@
 
 - name: Ensure maildir exists
   file:
-    name: "{{ mail_dir | default('~/mail') }}"
+    name: "{{ mail_dir }}"
     state: directory
 
 - name: Install mbsync config
@@ -39,3 +39,8 @@
     daemon_reload: yes
     state: started
     enabled: yes
+
+- name: Install notmuch config
+  template:
+    src: notmuch-config.j2
+    dest: "{{ lookup('env', 'HOME') }}/.notmuch-config"

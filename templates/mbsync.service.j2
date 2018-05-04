@@ -3,4 +3,5 @@ Description=Sync mail
 
 [Service]
 ExecStart=/usr/bin/mbsync -aV
+ExecStartPost=/usr/bin/notmuch new
 Type=oneshot
