@@ -1,0 +1,9 @@
+[Unit]
+Description=Compact notmuch periodically
+
+[Timer]
+OnCalendar={{ mail_compact_schedule }}
+Persistent=true
+
+[Install]
+WantedBy=default.target

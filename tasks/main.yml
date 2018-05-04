@@ -24,22 +24,6 @@
     name: ~/.config/systemd/user
     state: directory
 
-- name: Install mbsync units
-  template:
-    src: "mbsync.{{ item }}.j2"
-    dest: ~/.config/systemd/user/mbsync.{{ item }}
-  with_items:
-  - service
-  - timer
-
-- name: Enable mbsync timer
-  systemd:
-    name: mbsync.timer
-    user: yes
-    daemon_reload: yes
-    state: started
-    enabled: yes
-
 - name: Install notmuch config
   template:
     src: notmuch-config.j2
@@ -55,3 +39,26 @@
     create: yes
     name: ~/.emacs.d/init.el
     line: (require 'notmuch)
+
+- name: Install units units
+  template:
+    src: "{{ item }}.j2"
+    dest: ~/.config/systemd/user/{{ item }}
+  with_items:
+  - mbsync.service
+  - mbsync.timer
+  - notmuch-compact.service
+  - notmuch-compact.timer
+
+- name: Enable units
+  systemd:
+    name: "{{ item }}"
+    user: yes
+    daemon_reload: yes
+    # "restarted" because modified timers
+    # don't seem to work quite right otherwise
+    state: restarted
+    enabled: yes
+  with_items:
+  - mbsync.timer
+  - notmuch-compact.timer
