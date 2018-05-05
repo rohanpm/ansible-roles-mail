@@ -2,6 +2,7 @@
 Description=Sync mail
 
 [Service]
-ExecStart=/usr/bin/mbsync -aV
-ExecStartPost=/usr/bin/notmuch new
-Type=oneshot
+ExecStart=/bin/sh -c "mbsync -aV && exec notmuch new"
+Type=simple
+Restart=on-failure
+RestartSec={{ mail_restart_interval }}
