@@ -40,6 +40,11 @@
     name: ~/.emacs.d/init.el
     line: (require 'notmuch)
 
+- name: Set notmuch-archive-tags
+  emacs_custom:
+    name: notmuch-archive-tags
+    value: (quote ("-inbox -unread"))
+
 - name: Install units units
   template:
     src: "{{ item }}.j2"
