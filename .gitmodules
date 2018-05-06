@@ -1,0 +1,3 @@
+[submodule "library/ansible-modules-emacs"]
+	path = library/ansible-modules-emacs
+	url = https://github.com/rohanpm/ansible-modules-emacs.git
