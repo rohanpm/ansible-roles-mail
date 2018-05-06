@@ -40,10 +40,30 @@
     name: ~/.emacs.d/init.el
     line: (require 'notmuch)
 
-- name: Set notmuch-archive-tags
+- name: Set emacs variables
   emacs_custom:
-    name: notmuch-archive-tags
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items:
+
+  # Use sendmail to send mails; this should be configured to
+  # connect to remote SMTP service if needed
+  - name: send-mail-function
+    value: (quote sendmail-send-it)
+
+  # When I archive a message I'd like it to appear as read
+  - name: notmuch-archive-tags
     value: (quote ("-inbox -unread"))
+
+  # We expect the mail server to track sent mails
+  # FIXME: should I really do this?  There will be no record
+  # of the mail if something goes wrong?
+  - name: notmuch-fcc-dirs
+    value: nil
+
+- name: Include msmtp tasks
+  include: msmtp.yml
+  when: mail_use_msmtp
 
 - name: Install units units
   template:

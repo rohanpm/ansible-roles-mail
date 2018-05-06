@@ -3,3 +3,7 @@ mail_dir: "{{ '~/mail' | expanduser }}"
 mail_check_schedule: "*-*-* *:0/3:00"
 mail_compact_schedule: weekly
 mail_restart_interval: 2min
+mail_use_msmtp: yes
+
+mail_smtp_password: "{{ mail_password }}"
+mail_smtp_server: smtp.gmail.com

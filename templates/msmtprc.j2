@@ -1,0 +1,13 @@
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/pki/tls/certs/ca-bundle.crt
+
+account        mail
+host           {{ mail_smtp_server }}
+port           587
+from           {{ mail_user }}
+user           {{ mail_user }}
+password       {{ mail_smtp_password }}
+
+account default : mail
