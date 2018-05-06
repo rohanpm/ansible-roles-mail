@@ -80,10 +80,24 @@
     name: "{{ item }}"
     user: yes
     daemon_reload: yes
-    # "restarted" because modified timers
-    # don't seem to work quite right otherwise
-    state: restarted
     enabled: yes
   with_items:
   - mbsync.timer
   - notmuch-compact.timer
+
+- name: Check timer start times
+  timediff:
+    src: file:~/.config/systemd/user/{{ item }}.timer
+    dest: systemd:user:{{ item }}.timer
+  register: timediff
+  with_items:
+  - mbsync
+  - notmuch-compact
+
+- name: Restart timer if needed
+  systemd:
+    name: "{{ item.item }}.timer"
+    user: yes
+    state: restarted
+  when: item.newer
+  loop: "{{ timediff.results }}"
