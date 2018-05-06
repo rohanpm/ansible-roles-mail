@@ -65,7 +65,7 @@
   include: msmtp.yml
   when: mail_use_msmtp
 
-- name: Install units units
+- name: Install units
   template:
     src: "{{ item }}.j2"
     dest: ~/.config/systemd/user/{{ item }}
