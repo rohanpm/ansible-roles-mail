@@ -5,3 +5,5 @@ Description=Compact notmuch database
 ExecStart=/usr/bin/notmuch compact
 Type=simple
 TimeoutStartSec=1h
+Nice=18
+IOSchedulingPriority=6
