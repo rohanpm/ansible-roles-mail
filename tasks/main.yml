@@ -63,7 +63,15 @@
 
 - name: Include msmtp tasks
   include: msmtp.yml
-  when: mail_use_msmtp
+  when: mail_mta == 'mta'
+
+- name: Include sendmail tasks
+  include: sendmail.yml
+  when: mail_mta == 'sendmail'
+
+- name: Include exim tasks
+  include: exim.yml
+  when: mail_mta == 'exim'
 
 - name: Install units
   template:

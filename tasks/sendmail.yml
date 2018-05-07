@@ -1,0 +1,39 @@
+---
+- name: Install sendmail
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - sendmail
+  - sendmail-cf
+  become: yes
+
+- name: Use sendmail for sendmail
+  alternatives:
+    name: mta
+    path: /usr/sbin/sendmail.sendmail
+    link: /usr/sbin/sendmail
+  become: yes
+
+- name: Set sendmail SMART_HOST
+  lineinfile:
+    name: /etc/mail/sendmail.mc
+    regexp: >-
+      ^(?:dnl )?define\(`SMART_HOST', .*\)dnl$
+    line: >-
+      define(`SMART_HOST', `{{ mail_smtp_server }}')dnl
+    state: present
+  become: yes
+
+- name: Check if sendmail config is outdated
+  timediff:
+    src: /etc/mail/sendmail.mc
+    dest: systemd:sendmail
+  register: sendmail_mc
+
+- name: Enable sendmail service
+  systemd:
+    name: sendmail
+    enabled: yes
+    state: "{{ 'restarted' if sendmail_mc.newer else 'started' }}"
+  become: yes

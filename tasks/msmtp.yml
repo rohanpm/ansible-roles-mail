@@ -17,13 +17,3 @@
     path: /usr/bin/msmtp
     link: /usr/sbin/sendmail
   become: yes
-
-  # with_items:
-  # - mta
-  # - mta-mailq
-  # - mta-sendmail
-#       lrwxrwxrwx. 1 root root 22 Apr 30 20:33 mta -> /usr/bin/esmtp-wrapper
-# lrwxrwxrwx. 1 root root 22 Apr 30 20:33 mta-mailq -> /usr/bin/esmtp-wrapper
-# lrwxrwxrwx. 1 root root 30 Apr 30 20:33 mta-mailqman -> /usr/share/man/man1/esmtp.1.gz
-# lrwxrwxrwx. 1 root root 22 Apr 30 20:33 mta-sendmail -> /usr/bin/esmtp-wrapper
-# lrwxrwxrwx. 1 root root 30 Apr 30 20:33 mta-sendmailman -> /usr/share/man/man1/esmtp.1.gz

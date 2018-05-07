@@ -1,0 +1,17 @@
+---
+- name: Install exim
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - exim
+  become: yes
+
+- name: Use exim for sendmail
+  alternatives:
+    name: mta
+    path: /usr/sbin/sendmail.exim
+    link: /usr/sbin/sendmail
+  become: yes
+
+# TODO: implement the rest?
