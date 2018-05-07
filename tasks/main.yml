@@ -63,7 +63,7 @@
 
 - name: Include msmtp tasks
   include: msmtp.yml
-  when: mail_mta == 'mta'
+  when: mail_mta == 'msmtp'
 
 - name: Include sendmail tasks
   include: sendmail.yml
