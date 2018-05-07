@@ -3,4 +3,5 @@ Description=Compact notmuch database
 
 [Service]
 ExecStart=/usr/bin/notmuch compact
-Type=oneshot
+Type=simple
+TimeoutStartSec=1h
