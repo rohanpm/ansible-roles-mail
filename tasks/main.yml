@@ -61,6 +61,11 @@
   - name: notmuch-fcc-dirs
     value: nil
 
+- name: Install signature file
+  copy:
+    content: "{{ mail_signature }}"
+    dest: ~/.signature
+
 - name: Include msmtp tasks
   include: msmtp.yml
   when: mail_mta == 'msmtp'

@@ -12,3 +12,5 @@ mail_mta: msmtp
 mail_smtp_password: "{{ mail_password }}"
 mail_smtp_server: smtp.gmail.com
 mail_domain: "{{ mail_user.split('@')[1] }}"
+mail_signature: >
+  {{ lookup('pipe', '/bin/sh -c "getent passwd $(id -un) | cut -d: -f5"') }}
