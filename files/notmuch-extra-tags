@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+from __future__ import print_function
+import subprocess
+import json
+import traceback
+import sys
+import argparse
+import logging
+import os
+import collections
+
+LOG = logging.getLogger('notmuch-extra-tags')
+
+
+def get_terms():
+    # returns term to tag mapping
+    # e.g. {'Frobnitz': set(['important', 'work']), ...}
+    out = collections.defaultdict(set)
+    with open(os.path.expanduser('~/.notmuch-extra-tags')) as f:
+        for line in f.readlines():
+            line = line.strip()
+            (terms, tag) = line.split(' ', 1)
+            terms = terms.split(',')
+            for term in terms:
+                out[term].add(tag)
+    return out
+
+
+def inbox_messages():
+    p = subprocess.Popen(
+        ['notmuch', 'search', '--output=messages', 'is:inbox'],
+        stdout=subprocess.PIPE
+    )
+    while True:
+        line = p.stdout.readline()
+        if not line:
+            break
+        yield line.strip()
+    p.wait()
+    if p.returncode != 0:
+        raise RuntimeError('notmuch search failed')
+
+
+def message_bodies(ident):
+    cmd = [
+        'notmuch',
+        'show',
+        '--entire-thread=false',
+        '--format=json',
+        ident,
+    ]
+
+    to_check = [json.loads(subprocess.check_output(cmd))]
+    while to_check:
+        next_elem = to_check.pop(0)
+        if isinstance(next_elem, dict):
+            body = next_elem.get('body')
+            if body:
+                yield body
+        elif isinstance(next_elem, list):
+            to_check.extend(next_elem)
+
+
+def message_contents(ident):
+    for body in message_bodies(ident):
+        for part in body:
+            if part.get('content-type') == 'text/plain':
+                yield part['content']
+
+
+def get_tags(content, terms):
+    out = set()
+    for term, tags in terms.items():
+        if term in content:
+            out.update(tags)
+    return out
+
+
+def process_message(ident, dry_run, terms):
+    for content in message_contents(ident):
+        LOG.debug("%s content:\n%s", ident, content)
+        tags = get_tags(content, terms)
+        LOG.debug("%s tags: %s", content, tags)
+        if not tags:
+            continue
+
+        cmd = ['notmuch', 'tag']
+        cmd.extend(['+' + t for t in tags])
+        cmd.extend(['--', ident])
+
+        if dry_run:
+            print("Would run:", cmd)
+        else:
+            subprocess.check_call(cmd)
+
+
+def run(raw_args):
+    p = argparse.ArgumentParser()
+    p.add_argument('--dry-run', action='store_true')
+    p.add_argument('--debug', action='store_true')
+    args = p.parse_args(raw_args)
+
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
+
+    terms = get_terms()
+
+    failed = False
+    for msg in inbox_messages():
+        try:
+            process_message(msg, dry_run=args.dry_run, terms=terms)
+        except KeyboardInterrupt:
+            raise
+        except:
+            traceback.print_exc()
+            failed = True
+    sys.exit(3 if failed else 0)
+
+if __name__ == '__main__':
+    run(sys.argv[1:])

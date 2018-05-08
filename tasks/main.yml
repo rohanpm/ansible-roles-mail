@@ -29,6 +29,22 @@
     src: notmuch-config.j2
     dest: "{{ lookup('env', 'HOME') }}/.notmuch-config"
 
+- name: Install notmuch extra tags config
+  copy:
+    content: "{{ notmuch_extra_tags }}"
+    dest: "{{ lookup('env', 'HOME') }}/.notmuch-extra-tags"
+
+- name: Ensure hooks dir exists
+  file:
+    name: ~/.notmuch/hooks
+    state: directory
+
+- name: Deploy notmuch hook
+  copy:
+    src: notmuch-extra-tags
+    dest: ~/.notmuch/hooks/post-new
+    mode: 0533
+
 - name: Ensure emacs.d exists
   file:
     name: ~/.emacs.d
@@ -60,6 +76,18 @@
   # of the mail if something goes wrong?
   - name: notmuch-fcc-dirs
     value: nil
+
+  # Handle mail as LIFO
+  - name: notmuch-search-oldest-first
+    value: nil
+
+  # Highlight mails with 'mentioned' tag
+  - name: notmuch-search-line-faces
+    value: |-
+      (quote
+       (("unread" . notmuch-search-unread-face)
+        ("flagged" . notmuch-search-flagged-face)
+        ("mentioned" :background "cyan")))
 
 - name: Install signature file
   copy:
