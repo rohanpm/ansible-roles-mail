@@ -25,6 +25,26 @@
     state: present
   become: yes
 
+- name: Set sendmail MASQUERADE_AS
+  lineinfile:
+    name: /etc/mail/sendmail.mc
+    regexp: >-
+      ^(?:dnl )?MASQUERADE_AS\(`.*'\)dnl$
+    line: >-
+      MASQUERADE_AS(`{{ mail_domain }}')dnl
+    state: present
+  become: yes
+
+- name: Set sendmail masquerade_envelope
+  lineinfile:
+    name: /etc/mail/sendmail.mc
+    regexp: >-
+      ^(?:dnl )?FEATURE\(masquerade_envelope\)dnl
+    line: >-
+      FEATURE(masquerade_envelope)dnl
+    state: present
+  become: yes
+
 - name: Check if sendmail config is outdated
   timediff:
     src: /etc/mail/sendmail.mc

@@ -11,3 +11,4 @@ mail_mta: msmtp
 
 mail_smtp_password: "{{ mail_password }}"
 mail_smtp_server: smtp.gmail.com
+mail_domain: "{{ mail_user.split('@')[1] }}"
