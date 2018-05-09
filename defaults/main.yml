@@ -1,8 +1,10 @@
 ---
 mail_dir: "{{ '~/mail' | expanduser }}"
-mail_check_schedule: "*-*-* *:0/3:00"
+mail_check_schedule: "*-*-* *:0/20:00"
+mail_check_interval: 4min
 mail_compact_schedule: weekly
 mail_restart_interval: 2min
+mail_timeout: 30min
 
 # msmtp: good for personal use, e.g. personal gmail account where auth is needed;
 #        main downside is that mails can't be queued.

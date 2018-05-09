@@ -6,3 +6,4 @@ ExecStart=/bin/sh -c "mbsync -aV && exec notmuch new"
 Type=simple
 Restart=on-failure
 RestartSec={{ mail_restart_interval }}
+RuntimeMaxSec={{ mail_timeout }}

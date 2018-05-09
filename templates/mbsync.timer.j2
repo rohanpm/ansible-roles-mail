@@ -3,6 +3,7 @@ Description=Sync mail periodically
 
 [Timer]
 OnCalendar={{ mail_check_schedule }}
+OnUnitInactiveSec={{ mail_check_interval }}
 Persistent=true
 
 [Install]
