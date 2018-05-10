@@ -9,9 +9,9 @@
   - emacs-notmuch
   become: yes
 
-- name: Ensure maildir exists
+- name: Ensure maildir/notmuch/hooks dir exists
   file:
-    name: "{{ mail_dir }}"
+    name: "{{ mail_dir }}/.notmuch/hooks"
     state: directory
 
 - name: Install mbsync config
@@ -34,15 +34,10 @@
     content: "{{ notmuch_extra_tags }}"
     dest: "{{ lookup('env', 'HOME') }}/.notmuch-extra-tags"
 
-- name: Ensure hooks dir exists
-  file:
-    name: ~/.notmuch/hooks
-    state: directory
-
 - name: Deploy notmuch hook
   copy:
     src: notmuch-extra-tags
-    dest: ~/.notmuch/hooks/post-new
+    dest: "{{ mail_dir }}/.notmuch/hooks/post-new"
     mode: 0533
 
 - name: Ensure emacs.d exists
