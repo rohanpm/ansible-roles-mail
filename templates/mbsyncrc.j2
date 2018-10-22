@@ -2,6 +2,9 @@ IMAPAccount mail
 Host {{ mail_host|default('imap.gmail.com') }}
 User {{ mail_user }}
 Pass {{ mail_password }}
+{% if mail_tunnel|default(False) %}
+Tunnel "{{ mail_tunnel }}"
+{% endif %}
 SSLType IMAPS
 PipelineDepth 50
 
